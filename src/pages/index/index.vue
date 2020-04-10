@@ -1,10 +1,6 @@
 <template>
-	<view class="content">
-		<image class="logo" src="/static/logo.png"></image>
-		<view>啊啊啊啊啊，第一个小程序项目出来啦</view>
-		<view>
-			<text class="title">{{title}}</text>
-		</view>
+	<view>
+		首页
 	</view>
 </template>
 
@@ -12,7 +8,7 @@
 	export default {
 		data() {
 			return {
-				title: 'Hello'
+				
 			}
 		},
 		onLoad() {
