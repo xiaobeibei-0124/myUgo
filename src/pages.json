@@ -29,7 +29,7 @@
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "优购商城",
 		"navigationBarBackgroundColor": "#eb4450",
-		"backgroundColor": "#F7F7F7"
+		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
 		"color": "#000",
