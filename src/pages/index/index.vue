@@ -1,12 +1,8 @@
 <template>
-	<view>
+<!-- 滑动需要配合溢出隐藏和屏幕高度 -->
+	<view :style="{overflow:'hidden',height:h}">
 		<!-- 搜索区域 -->
-		<view class="search">
-			<view class="search-input">
-				<input type="text" placeholder="请输入搜索商品">
-			</view>
-			<view class="search-content"></view>
-		</view>
+		<search @my='indexGetHeight'></search>
 		<!-- 轮播图区域 -->
 		<view class="swiper-box">
 			<swiper autoplay 
@@ -119,35 +115,28 @@
 </template>
 
 <script>
+import search from '@/components/search.vue'
 	export default {
 		data() {
 			return {
-				
+				h:"auto" //溢出隐藏，设置高度为自动即可滑动，固定高度不能滑
 			}
+		},
+		components:{
+			search
 		},
 		onLoad() {
 
 		},
 		methods: {
-
+			indexGetHeight(height){
+				this.h=height //子组件传递进来固定高度，使屏幕不能滑动
+			}
 		}
 	}
 </script>
 
 <style lang='less' scoped>
-	.search {
-		.search-input {
-			background-color: #eb4450;
-			padding: 20rpx 15rpx;
-			input {
-				background-color: #fff;
-				height: 60rpx;
-				padding-left: 10rpx;
-				font-size: 28rpx;
-				border-radius: 5rpx;
-			}
-		}
-	}
 	.swiper-box {
 		swiper {
 			width: 750rpx;
