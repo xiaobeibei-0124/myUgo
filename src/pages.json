@@ -3,7 +3,9 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "首页"
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh":true, //配置下拉刷新，需在首页监听事件，手动关闭
+				"backgroundColor":"#000" //下拉刷新的背景颜色
 			}
 		},
 		{

@@ -9,108 +9,33 @@
 							indicator-dots 
 							indicator-color="rgba(255,255,255,.5)" 
 							indicator-active-color="#fff">
-				<swiper-item>
-					<navigator url="">
-						<image src="../../static/uploads/banner1.png"></image>
-					</navigator>
-				</swiper-item>
-				<swiper-item>
-					<navigator url="">
-						<image src="../../static/uploads/banner2.png"></image>
-					</navigator>
-				</swiper-item>
-				<swiper-item>
-					<navigator url="">
-						<image src="../../static/uploads/banner3.png"></image>
+				<swiper-item v-for="item in swiperdata" :key="item.goods_id">
+					<navigator :url="item.navigator_url">
+						<image :src="item.image_src"></image>
 					</navigator>
 				</swiper-item>
 			</swiper>
 		</view>
 		<!-- 菜单导航区域 -->
 		<view class="navs">
-			<navigator url="" >
-				<image src="../../static/uploads/icon_index_nav_1@2x.png" />
-			</navigator>
-			<navigator url="" >
-				<image src="../../static/uploads/icon_index_nav_2@2x.png" />
-			</navigator>
-			<navigator url="" >
-				<image src="../../static/uploads/icon_index_nav_3@2x.png" />
-			</navigator>
-			<navigator url="" >
-				<image src="../../static/uploads/icon_index_nav_4@2x.png" />
+			<navigator url="" v-for="item in navslist" :key="item.image_src">
+				<image :src="item.image_src" />
 			</navigator>
 		</view>
 		<!-- 楼层区域 -->
 		<view class="box">
-			<view class="floor">
+			<view class="floor" v-for="(item,index) in floors" :key="index">
 				<view class="floor-title">
-					<image src="../../static/uploads/pic_floor01_title.png" />
+					<image :src="item.floor_title.image_src" />
 				</view>
 				<view class="item">
-					<navigator url="" >
-						<image src="../../static/uploads/pic_floor01_1@2x.png"  />
-					</navigator>
-					<navigator url="" >
-						<image src="../../static/uploads/pic_floor01_2@2x.png"  />
-					</navigator>
-					<navigator url="" >
-						<image src="../../static/uploads/pic_floor01_3@2x.png"  />
-					</navigator>
-					<navigator url="" >
-						<image src="../../static/uploads/pic_floor01_4@2x.png"  />
-					</navigator>
-					<navigator url="" >
-						<image src="../../static/uploads/pic_floor01_5@2x.png"  />
+					<!-- 循环item下title的数据 -->
+					<navigator url="" v-for="sub in item.product_list" :key="sub.name">
+						<image :src="sub.image_src"  />
 					</navigator>
 				</view>
 			</view>
-			<view class="floor">
-				<view class="floor-title">
-					<image src="../../static/uploads/pic_floor02_title.png" />
-				</view>
-				<view class="item">
-					<navigator url="" >
-						<image src="../../static/uploads/pic_floor02_1@2x.png"  />
-					</navigator>
-					<navigator url="" >
-						<image src="../../static/uploads/pic_floor02_2@2x.png"  />
-					</navigator>
-					<navigator url="" >
-						<image src="../../static/uploads/pic_floor02_3@2x.png"  />
-					</navigator>
-					<navigator url="" >
-						<image src="../../static/uploads/pic_floor02_4@2x.png"  />
-					</navigator>
-					<navigator url="" >
-						<image src="../../static/uploads/pic_floor02_5@2x.png"  />
-					</navigator>
-				</view>
-			</view>
-			<view class="floor">
-				<view class="floor-title">
-					<image src="../../static/uploads/pic_floor03_title.png" />
-				</view>
-				<view class="item">
-					<navigator url="" >
-						<image src="../../static/uploads/pic_floor03_1@2x.png"  />
-					</navigator>
-					<navigator url="" >
-						<image src="../../static/uploads/pic_floor03_2@2x.png"  />
-					</navigator>
-					<navigator url="" >
-						<image src="../../static/uploads/pic_floor03_3@2x.png"  />
-					</navigator>
-					<navigator url="" >
-						<image src="../../static/uploads/pic_floor03_4@2x.png"  />
-					</navigator>
-					<navigator url="" >
-						<image src="../../static/uploads/pic_floor03_5@2x.png"  />
-					</navigator>
-				</view>
-			</view>
-		</view>
-		
+		</view>	
 	</view>
 </template>
 
@@ -119,20 +44,58 @@ import search from '@/components/search.vue'
 	export default {
 		data() {
 			return {
-				h:"auto" //溢出隐藏，设置高度为自动即可滑动，固定高度不能滑
+				h:"auto" ,//溢出隐藏，设置高度为自动即可滑动，固定高度不能滑
+				swiperdata:[],//轮播图数据
+				navslist:[],//导航数据
+				floors:[] //楼层数据
 			}
 		},
 		components:{
 			search
 		},
 		onLoad() {
-
+			this.getSwiper()
+			this.getNavs()
+			this.getFloors()
 		},
 		methods: {
 			indexGetHeight(height){
 				this.h=height //子组件传递进来固定高度，使屏幕不能滑动
+			},
+			//获取轮播图
+			async getSwiper(){
+				let res = await this.http({
+					url:'/api/public/v1/home/swiperdata'
+				})
+				//console.log(res);
+				this.swiperdata=res.message	
+			},
+			//获取导航图标
+			async getNavs(){
+				let res = await this.http({
+					url:'/api/public/v1/home/catitems'
+				})
+				this.navslist=res.message
+			},
+			//获取楼层数据
+			async getFloors(){
+				let res = await this.http({
+					url:'/api/public/v1/home/floordata'
+				})
+				this.floors=res.message
 			}
-		}
+		},
+		//监听下拉刷新事件
+		async onPullDownRefresh(){
+      console.log('首页下拉啦~~')
+      // 刷新 页面 就是从头请求数据 来一遍
+      // 查看network请求 
+      await this.getSwiper() //假如 3秒
+      await this.getNavs()//假如 5秒
+      await this.getFloors()//假如 2秒
+      // 等待请求完毕 应该 立刻关闭下拉效果
+      uni.stopPullDownRefresh()
+}
 	}
 </script>
 
